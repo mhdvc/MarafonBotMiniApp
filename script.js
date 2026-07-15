@@ -1,3 +1,7 @@
+import { loadHome } from "./home.js";
+import { loadProfile } from "./profile.js";
+import { loadTimer } from "./timer.js";
+
 const tg = window.Telegram.WebApp;
 
 tg.ready();
@@ -5,31 +9,50 @@ tg.expand();
 
 const user = tg.initDataUnsafe.user;
 
+const hello = document.getElementById("hello");
+const avatar = document.getElementById("avatar");
+const page = document.getElementById("page-home");
+
 if (user) {
-    document.getElementById("username").innerHTML =
-        `👋 ${user.first_name}`;
+    hello.textContent = `👋 Salom, ${user.first_name}`;
+    avatar.textContent = user.first_name[0].toUpperCase();
 }
 
-document.getElementById("profile").onclick = () => {
-    alert("👤 Profil sahifasi tez orada tayyor bo'ladi.");
-};
+function showHome() {
+    page.innerHTML = loadHome();
+}
 
-document.getElementById("timer").onclick = () => {
-    alert("⏱ Taymer sahifasi tez orada tayyor bo'ladi.");
-};
+function showProfile() {
+    page.innerHTML = loadProfile(user);
+}
 
-document.getElementById("rating").onclick = () => {
-    alert("🏆 Reyting sahifasi tez orada tayyor bo'ladi.");
-};
+function showTimer() {
+    page.innerHTML = loadTimer();
+}
 
-document.getElementById("payment").onclick = () => {
-    alert("💳 To'lov sahifasi tez orada tayyor bo'ladi.");
-};
+showHome();
 
-document.getElementById("referral").onclick = () => {
-    alert("👥 Referal sahifasi tez orada tayyor bo'ladi.");
-};
+document.querySelectorAll(".nav-btn").forEach(btn => {
+    btn.onclick = () => {
 
-document.getElementById("settings").onclick = () => {
-    alert("⚙️ Sozlamalar tez orada tayyor bo'ladi.");
-};
+        document.querySelectorAll(".nav-btn").forEach(b =>
+            b.classList.remove("active")
+        );
+
+        btn.classList.add("active");
+
+        switch (btn.id) {
+            case "home":
+                showHome();
+                break;
+
+            case "profile":
+                showProfile();
+                break;
+
+            case "timer":
+                showTimer();
+                break;
+        }
+    };
+});
